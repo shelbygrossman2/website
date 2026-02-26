@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stanford Internet Observatory Archive — Shelby Grossman</title>
+  <meta name="description" content="Archived research from the Stanford Internet Observatory, preserved from the Wayback Machine.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #FDFBF7;
+      --bg-alt: #F4EFE6;
+      --text: #1a1a1a;
+      --text-secondary: #5c5c5c;
+      --text-tertiary: #888;
+      --accent: #8B1A1A;
+      --accent-light: rgba(139, 26, 26, 0.08);
+      --accent-hover: #6D1414;
+      --personal-accent: #8B6F4E;
+      --border: #E4DDD2;
+      --card-bg: #FFFFFF;
+      --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+      --radius: 6px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: var(--accent-hover); }
+    ::selection { background: rgba(139, 26, 26, 0.12); }
+
+    /* Back link */
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.85rem; color: var(--personal-accent);
+      margin-bottom: 2rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: #6D563D; }
+    .back-link svg { width: 16px; height: 16px; }
+
+    /* Header */
+    .archive-header {
+      max-width: 820px; margin: 0 auto;
+      padding: 4rem 2rem 0;
+    }
+    .archive-header h1 {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 2.6rem; font-weight: 400;
+      line-height: 1.2; margin-bottom: 0.6rem;
+      color: var(--text);
+    }
+    .archive-header .subtitle {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 1.15rem; font-weight: 300;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      font-style: italic;
+      margin-bottom: 1.5rem;
+    }
+    .archive-header .intro {
+      font-size: 0.92rem; color: var(--text-secondary);
+      line-height: 1.75; margin-bottom: 0.5rem;
+    }
+    .archive-header .intro a { color: var(--personal-accent); }
+
+    .archive-stats {
+      display: flex; gap: 2rem; margin-top: 1.5rem;
+      padding: 1rem 0; border-top: 1px solid var(--border);
+    }
+    .stat { text-align: center; }
+    .stat-number {
+      font-family: 'Crimson Pro', serif;
+      font-size: 1.8rem; font-weight: 400; color: var(--accent);
+    }
+    .stat-label { font-size: 0.72rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.08em; }
+
+    /* Search */
+    .search-wrap {
+      margin: 2rem 0 1rem;
+      position: relative;
+    }
+    .search-wrap input {
+      width: 100%; padding: 0.7rem 1rem 0.7rem 2.6rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-family: inherit; font-size: 0.88rem;
+      background: var(--card-bg);
+      color: var(--text);
+      transition: border-color 0.2s;
+    }
+    .search-wrap input:focus {
+      outline: none; border-color: var(--accent);
+    }
+    .search-wrap input::placeholder { color: var(--text-tertiary); }
+    .search-icon {
+      position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%);
+      width: 16px; height: 16px; color: var(--text-tertiary);
+    }
+    .search-count {
+      font-size: 0.78rem; color: var(--text-tertiary);
+      margin-top: 0.4rem; min-height: 1.2em;
+    }
+
+    /* Categories */
+    .archive-content {
+      max-width: 820px; margin: 0 auto;
+      padding: 1rem 2rem 4rem;
+    }
+
+    .archive-category {
+      margin-bottom: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card-bg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: box-shadow 0.3s;
+    }
+    .archive-category:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05), 0 6px 20px rgba(0,0,0,0.03);
+    }
+
+    .category-toggle {
+      display: flex; align-items: center; justify-content: space-between;
+      width: 100%; padding: 1.15rem 1.5rem;
+      background: none; border: none; cursor: pointer;
+      text-align: left; transition: background 0.2s;
+    }
+    .category-toggle:hover { background: var(--accent-light); }
+
+    .category-info h3 {
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 1.2rem; font-weight: 500;
+      color: var(--text); margin-bottom: 0.15rem;
+      line-height: 1.3;
+    }
+    .category-info p {
+      font-size: 0.8rem; color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .category-right {
+      display: flex; align-items: center; gap: 0.75rem;
+      flex-shrink: 0; margin-left: 1.5rem;
+    }
+    .category-count {
+      font-size: 0.78rem; font-weight: 500;
+      padding: 0.2rem 0.6rem;
+      background: var(--accent-light);
+      color: var(--accent);
+      border-radius: 12px;
+    }
+    .chevron {
+      width: 18px; height: 18px; color: var(--text-tertiary);
+      transition: transform 0.3s ease;
+    }
+    .category-toggle.open .chevron { transform: rotate(180deg); }
+
+    .category-body {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.5s ease;
+    }
+    .category-body.open { max-height: 8000px; }
+
+    .category-body ul {
+      list-style: none; padding: 0 1.5rem 1.25rem;
+      border-top: 1px solid var(--border);
+    }
+    .category-body li {
+      padding: 0.45rem 0;
+      border-bottom: 1px solid rgba(228, 221, 210, 0.5);
+    }
+    .category-body li:last-child { border-bottom: none; }
+    .category-body li a {
+      font-size: 0.88rem; color: var(--text);
+      transition: color 0.2s;
+      display: block; line-height: 1.5;
+    }
+    .category-body li a:hover { color: var(--accent); }
+
+    /* Hidden state for search filtering */
+    .archive-category.hidden { display: none; }
+    .category-body li.hidden { display: none; }
+
+    /* Footer */
+    .archive-footer {
+      max-width: 820px; margin: 0 auto;
+      padding: 2rem 2rem 3rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.8rem; color: var(--text-tertiary);
+      line-height: 1.7;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .archive-header { padding: 3rem 1.5rem 0; }
+      .archive-header h1 { font-size: 2rem; }
+      .archive-content { padding: 1rem 1.5rem 3rem; }
+      .category-toggle { padding: 1rem 1.25rem; }
+      .category-body ul { padding: 0 1.25rem 1rem; }
+      .category-info p { display: none; }
+      .archive-stats { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="archive-header">
+    <a href="index.html" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back to shelbygrossman.com
+    </a>
+
+    <h1>Stanford Internet Observatory Archive</h1>
+    <p class="subtitle">Preserved research and analysis from the Stanford Internet Observatory (2019–2024)</p>
+    <p class="intro">
+      The <strong>Stanford Internet Observatory</strong> studied the abuse of information technology—with a focus on social media—and produced open-source investigations, policy analysis, and peer-reviewed research. We are extremely grateful to the team at the <a href="https://web.archive.org/" target="_blank" rel="noopener">Wayback Machine</a> for archiving our website. Shelby Grossman used Claude Cowork to put together this website. Any errors/typos are a result of that process, and not the Wayback Machine.
+    </p>
+
+    <div class="archive-stats">
+      <div class="stat">
+        <div class="stat-number">277</div>
+        <div class="stat-label">Archived Pages</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">7</div>
+        <div class="stat-label">Categories</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">2019–24</div>
+        <div class="stat-label">Active Years</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="archive-content">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Search the archive..." oninput="filterArchive(this.value)">
+    </div>
+    <div class="search-count" id="searchCount"></div>
+
+        <div class="archive-category" id="investigations">
+          <button class="category-toggle" onclick="toggleCategory(this)" aria-expanded="false">
+            <div class="category-info">
+              <h3>Platform Takedown Investigations</h3>
+              <p>Analyses of coordinated inauthentic behavior and state-linked influence operations.</p>
+            </div>
+            <div class="category-right">
+              <span class="category-count">92</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </button>
+          <div class="category-body">
+            <ul>
+            <li><a href="takedown" target="_blank" rel="noopener">20210708 Jordan Fb Takedown</a></li>
+            <li><a href="2020" target="_blank" rel="noopener">Africa Takedown December 2020</a></li>
+            <li><a href="stream" target="_blank" rel="noopener">African Stream</a></li>
+            <li><a href="takedown" target="_blank" rel="noopener">April 2020 Egypt Takedown</a></li>
+            <li><a href="takedown" target="_blank" rel="noopener">April 2020 Honduras Takedown</a></li>
+            <li><a href="takedown" target="_blank" rel="noopener">April 2020 Serbia Takedown</a></li>
+            <li><a href="takedown" target="_blank" rel="noopener">April 2020 Twitter Takedown</a></li>
+            <li><a href="assets" target="_blank" rel="noopener">Bolivarian Factions Facebook Takes Down Inauthentic Assets</a></li>
+            <li><a href="2021" target="_blank" rel="noopener">Car Takedown May 2021</a></li>
+            <li><a href="0" target="_blank" rel="noopener">Chinese Expat News Site Resists Ccp Influence 0</a></li>
+            <li><a href="china" target="_blank" rel="noopener">Clubhouse China</a></li>
+            <li><a href="Friday" target="_blank" rel="noopener">Clubhouse China By The Research Group On Friday</a></li>
+            <li><a href="zh" target="_blank" rel="noopener">Clubhouse China Zh</a></li>
+            <li><a href="hashtags" target="_blank" rel="noopener">Dezurdateam Twitter Network Promotes Pro Cuba Hashtags</a></li>
+            <li><a href="africa" target="_blank" rel="noopener">Evidence Russia Linked Influence Operations Africa</a></li>
+            <li><a href="takedown" target="_blank" rel="noopener">Facebook January 2021 Takedown</a></li>
+            <li><a href="takedowns" target="_blank" rel="noopener">February 2021 Twitter Takedowns</a></li>
+            <li><a href="takedown" target="_blank" rel="noopener">Fronts Friends Investigation Two Twitter Networks Linked Russian Actors Takedown</a></li>
+            <li><a href="ukraine" target="_blank" rel="noopener">Full Spectrum Propaganda Ukraine</a></li>
+            <li><a href="operations" target="_blank" rel="noopener">Gender Dimensions Foreign Influence Operations</a></li>
+            <li><a href="operation" target="_blank" rel="noopener">Hello Other Side Investigation Musical Pro Muslim Brotherhood Disinformation Operation</a></li>
+            <li><a href="strategies" target="_blank" rel="noopener">House Vs Outsourced Trolls How Digital Mercenaries Shape State Influence Strategies</a></li>
+            <li><a href="platforms" target="_blank" rel="noopener">How Coordinated Inauthentic Behavior Continues Social Platforms</a></li>
+            <li><a href="propaganda" target="_blank" rel="noopener">How Unmoderated Platforms Became Frontline Russian Propaganda</a></li>
+            <li><a href="20201215" target="_blank" rel="noopener">IRA Takedown 20201215</a></li>
+            <li><a href="takedown" target="_blank" rel="noopener">India Twitter Takedown</a></li>
+            <li><a href="nigeria" target="_blank" rel="noopener">Islamic Movement Nigeria</a></li>
+            <li><a href="campaign" target="_blank" rel="noopener">Jordanian Disinformation Campaign</a></li>
+            <li><a href="takedown" target="_blank" rel="noopener">June 2020 PRC Takedown</a></li>
+            <li><a href="takedown" target="_blank" rel="noopener">June 2020 Russia Takedown</a></li>
+            <li><a href="takedown" target="_blank" rel="noopener">June 2020 Turkey Takedown</a></li>
+            <li><a href="russia" target="_blank" rel="noopener">June 2020 Twitter Inauthentic Activity Takedown Russia</a></li>
+            <li><a href="takedown" target="_blank" rel="noopener">June 2020 Twitter Takedown</a></li>
+            <li><a href="takedown" target="_blank" rel="noopener">June2020 Twitter Takedown</a></li>
+            <li><a href="takedown" target="_blank" rel="noopener">Kosovo Blue Lives Takedown</a></li>
+            <li><a href="prigozhin" target="_blank" rel="noopener">Libya Prigozhin</a></li>
+            <li><a href="prigozhin.34" target="_blank" rel="noopener">Libya Prigozhin.34</a></li>
+            <li><a href="setter" target="_blank" rel="noopener">Libya Scene Setter</a></li>
+            <li><a href="setter.B6" target="_blank" rel="noopener">Libya Scene Setter.b6</a></li>
+            <li><a href="operation" target="_blank" rel="noopener">Maduro’s Menagerie Twitter Client Usage Venezuelan Twitter Operation</a></li>
+            <li><a href="0" target="_blank" rel="noopener">Manufacturing Influence 0</a></li>
+            <li><a href="0’" target="_blank" rel="noopener">Manufacturing Influence 0’</a></li>
+            <li><a href="takedown" target="_blank" rel="noopener">Meta Mind Force Takedown</a></li>
+            <li><a href="takedowns" target="_blank" rel="noopener">Middle East Influence Operations Observations Across Social Media Takedowns</a></li>
+            <li><a href="israeli" target="_blank" rel="noopener">Mind Farce Investigation Inauthentic Facebook And Instagram Network Linked Israeli</a></li>
+            <li><a href="anti" target="_blank" rel="noopener">Ministry Made Pages Yemen Based Actors Impersonate Government Agencies Spread Anti</a></li>
+            <li><a href="0" target="_blank" rel="noopener">Ministry Made Pages Yemen Based Actors Impersonate Government Agencies Spread Anti 0</a></li>
+            <li><a href="trolls" target="_blank" rel="noopener">New Copyright Trolls</a></li>
+            <li><a href="story" target="_blank" rel="noopener">New Whitepaper Telling Chinas Story</a></li>
+            <li><a href="belarus" target="_blank" rel="noopener">No Modest Voices Social Media And Protests Belarus</a></li>
+            <li><a href="takedowns" target="_blank" rel="noopener">November 2020 Takedowns</a></li>
+            <li><a href="forge" target="_blank" rel="noopener">Oct 2020 Fb Rally Forge</a></li>
+            <li><a href="and" target="_blank" rel="noopener">One Face Many Names Investigation Fake Ngos And Media Outlets Linked Harouna Douamba And</a></li>
+            <li><a href="networks" target="_blank" rel="noopener">One Topic Two Networks</a></li>
+            <li><a href="takedown" target="_blank" rel="noopener">Oya Cluster Takedown</a></li>
+            <li><a href="movement" target="_blank" rel="noopener">Playing Both Sides Russian State Backed Media Coverage Blacklivesmatter Movement</a></li>
+            <li><a href="setter" target="_blank" rel="noopener">Poland Scene Setter</a></li>
+            <li><a href="blog" target="_blank" rel="noopener">Potemkin Pages Personas Blog</a></li>
+            <li><a href="tanks" target="_blank" rel="noopener">Potemkin Think Tanks</a></li>
+            <li><a href="africa" target="_blank" rel="noopener">Prigozhin Africa</a></li>
+            <li><a href="guinéen" target="_blank" rel="noopener">Qui Sont Les Trolls Facebook Du Président Guinéen</a></li>
+            <li><a href="and" target="_blank" rel="noopener">Reply Guys Go Hunting Investigation US Astroturfing Operation Facebook Twitter And</a></li>
+            <li><a href="silence" target="_blank" rel="noopener">Reporting Duty How Network Pakistan Based Accounts Leveraged Mass Reporting Silence</a></li>
+            <li><a href="operations" target="_blank" rel="noopener">Research Note Salesperson Does Not Exist How Tactics Political Influence Operations</a></li>
+            <li><a href="stoked" target="_blank" rel="noopener">Royal Sockpuppets And Handle Switching How Saudi Arabia Linked Twitter Network Stoked</a></li>
+            <li><a href="takedowns" target="_blank" rel="noopener">SIO Aug 22 Takedowns</a></li>
+            <li><a href="ua" target="_blank" rel="noopener">SIO Aug 22 Takedowns Ua</a></li>
+            <li><a href="deployed" target="_blank" rel="noopener">Salesperson Does Not Exist How Tactics Political Influence Operations Social Media Are Deployed</a></li>
+            <li><a href="political" target="_blank" rel="noopener">Seeing Double Twitter Removes Network Duplicate Accounts Cheerleading Mexican Political</a></li>
+            <li><a href="libya" target="_blank" rel="noopener">Slanted Narratives Social Media And Foreign Influence Libya</a></li>
+            <li><a href="takedown" target="_blank" rel="noopener">Smaat Twitter Takedown</a></li>
+            <li><a href="libya" target="_blank" rel="noopener">Social Media Foreign Influence Libya</a></li>
+            <li><a href="takedown" target="_blank" rel="noopener">Sockpuppets Target Nagorno Karabakh Takedown</a></li>
+            <li><a href="palestinian" target="_blank" rel="noopener">Staying Current Investigation Now Suspended Facebook Network Promoting Palestinian</a></li>
+            <li><a href="disin" target="_blank" rel="noopener">Taiwan Disin</a></li>
+            <li><a href="issue" target="_blank" rel="noopener">Taiwan Disin Formation Partisan Issue</a></li>
+            <li><a href="issue" target="_blank" rel="noopener">Taiwan Disinformation Partisan Issue</a></li>
+            <li><a href="takedowns" target="_blank" rel="noopener">Takedowns</a></li>
+            <li><a href="story" target="_blank" rel="noopener">Telling Chinas Story</a></li>
+            <li><a href="operations" target="_blank" rel="noopener">Threat Foreign Influence Operations</a></li>
+            <li><a href="twiter_vz_202112" target="_blank" rel="noopener">Twiter_vz_202112</a></li>
+            <li><a href="saudi" target="_blank" rel="noopener">Twitter Facebook Egypt UAE Saudi</a></li>
+            <li><a href="2021" target="_blank" rel="noopener">Twitter Takedown December 2021</a></li>
+            <li><a href="2020" target="_blank" rel="noopener">Twitter Takedown Iran October 2020</a></li>
+            <li><a href="2020" target="_blank" rel="noopener">Twitter Takedown October 2020</a></li>
+            <li><a href="smaat" target="_blank" rel="noopener">Twitter Takedown Saudi Smaat</a></li>
+            <li><a href="twitter_ua_202208" target="_blank" rel="noopener">Twitter_ua_202208</a></li>
+            <li><a href="takedown" target="_blank" rel="noopener">Unheard Voice Evaluating Five Years Pro Western Covert Influence Operations Takedown</a></li>
+            <li><a href="us" target="_blank" rel="noopener">Viva La Resistance Now Suspended Twitter Accounts Iran Claim Resistance Personas US</a></li>
+            <li><a href="0" target="_blank" rel="noopener">Who Are President Guineas Facebook Trolls 0</a></li>
+            <li><a href="takedown" target="_blank" rel="noopener">Yemen Facebook Takedown</a></li>
+            <li><a href="nigeria" target="_blank" rel="noopener">Zakzakylifematters Investigation Facebook Operation Linked Islamic Movement Nigeria</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="archive-category" id="elections">
+          <button class="category-toggle" onclick="toggleCategory(this)" aria-expanded="false">
+            <div class="category-info">
+              <h3>Election Integrity</h3>
+              <p>Research on election security, misinformation during elections, and the Election Integrity Partnership.</p>
+            </div>
+            <div class="category-right">
+              <span class="category-count">34</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </button>
+          <div class="category-body">
+            <ul>
+            <li><a href="pandemic" target="_blank" rel="noopener">2020 Elections Oral History Pandemic</a></li>
+            <li><a href="project" target="_blank" rel="noopener">2020 Elections Oral History Project</a></li>
+            <li><a href="aftermath" target="_blank" rel="noopener">2020 Elections Oral History Project Aftermath</a></li>
+            <li><a href="election" target="_blank" rel="noopener">2020 Elections Oral History Project Election</a></li>
+            <li><a href="how" target="_blank" rel="noopener">2020 Elections Oral History Project How</a></li>
+            <li><a href="transition" target="_blank" rel="noopener">2020 Elections Oral History Project Peaceful Transition</a></li>
+            <li><a href="partnership" target="_blank" rel="noopener">Announcing Election Integrity Partnership</a></li>
+            <li><a href="familiar" target="_blank" rel="noopener">Arizonas Tricky Voting Machines Sounds Suspiciously Familiar</a></li>
+            <li><a href="setter" target="_blank" rel="noopener">Brazil Election Scene Setter</a></li>
+            <li><a href="beyond" target="_blank" rel="noopener">Combating Information Manipulation Playbook Elections And Beyond</a></li>
+            <li><a href="election" target="_blank" rel="noopener">Election Integrity Partnership Releases Final Report Mis And Disinformation 2020 US Election</a></li>
+            <li><a href="election" target="_blank" rel="noopener">Influence And Improvisation Participatory Disinformation During 2020 US Election</a></li>
+            <li><a href="election" target="_blank" rel="noopener">Investigation Social Media Labeling Decisions Preceding 2020 US Election</a></li>
+            <li><a href="project" target="_blank" rel="noopener">Launching SIO Virality Project</a></li>
+            <li><a href="project’" target="_blank" rel="noopener">Launching SIO Virality Project’</a></li>
+            <li><a href="election" target="_blank" rel="noopener">Long Fuse Misinformation And 2020 Election</a></li>
+            <li><a href="chaos" target="_blank" rel="noopener">Poland Election Chaos</a></li>
+            <li><a href="out" target="_blank" rel="noopener">Polish Elections 2 Months Out</a></li>
+            <li><a href="us" target="_blank" rel="noopener">Securing American Elections Prescriptions Enhancing Integrity And Independence 2020 US</a></li>
+            <li><a href="map" target="_blank" rel="noopener">Securing American Elections Report Offers Policy Road Map</a></li>
+            <li><a href="source" target="_blank" rel="noopener">Selection Final Projects Stanford Internet Observatory’s Online Open Source</a></li>
+            <li><a href="chief" target="_blank" rel="noopener">Should We Be Worried About Election Interference 2020 Probably Says Facebook’s Former Chief</a></li>
+            <li><a href="2020" target="_blank" rel="noopener">Taiwan Election Blackout 2020</a></li>
+            <li><a href="countdown" target="_blank" rel="noopener">Taiwan Election Final Countdown</a></li>
+            <li><a href="countdownStanford" target="_blank" rel="noopener">Taiwan Election Final Countdownstanford</a></li>
+            <li><a href="out" target="_blank" rel="noopener">Taiwan Election Three Weeks Out</a></li>
+            <li><a href="outStrong" target="_blank" rel="noopener">Taiwan Election Three Weeks Outstrong</a></li>
+            <li><a href="setter" target="_blank" rel="noopener">Taiwan Presidential Election 2020 Scene Setter</a></li>
+            <li><a href="capital" target="_blank" rel="noopener">Talking Election Security Nation’s Capital</a></li>
+            <li><a href="elections" target="_blank" rel="noopener">Testimony Renee Diresta Committee House Administration Subcommittee Elections</a></li>
+            <li><a href="elections" target="_blank" rel="noopener">US Pr Firm Steps Contested Elections</a></li>
+            <li><a href="project" target="_blank" rel="noopener">Virality Project</a></li>
+            <li><a href="report" target="_blank" rel="noopener">Virality Project Final Report</a></li>
+            <li><a href="election" target="_blank" rel="noopener">Were Facebook And Twitter Consistent Labeling Misleading Posts During 2020 Election</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="archive-category" id="child-safety">
+          <button class="category-toggle" onclick="toggleCategory(this)" aria-expanded="false">
+            <div class="category-info">
+              <h3>Online Child Safety</h3>
+              <p>Work on child sexual abuse material (CSAM), platform safety for minors, and youth well-being online.</p>
+            </div>
+            <div class="category-right">
+              <span class="category-count">16</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </button>
+          <div class="category-body">
+            <ul>
+            <li><a href="media" target="_blank" rel="noopener">Addressing Child Exploitation Federated Social Media</a></li>
+            <li><a href="csam" target="_blank" rel="noopener">Cross Platform Dynamics Self Generated CSAM</a></li>
+            <li><a href="report" target="_blank" rel="noopener">Cybertipline Report</a></li>
+            <li><a href="children" target="_blank" rel="noopener">Fake Profiles Real Children</a></li>
+            <li><a href="mitigations" target="_blank" rel="noopener">Generative ML And CSAM Implications And Mitigations</a></li>
+            <li><a href="system" target="_blank" rel="noopener">How Fix Online Child Exploitation Reporting System</a></li>
+            <li><a href="queries" target="_blank" rel="noopener">How Search Engines Handle Suicide Queries</a></li>
+            <li><a href="abuse" target="_blank" rel="noopener">Investigation Finds AI Image Generation Models Trained Child Abuse</a></li>
+            <li><a href="report" target="_blank" rel="noopener">ML CSAM Report</a></li>
+            <li><a href="ecosystem" target="_blank" rel="noopener">Marking Progress Online Child Safety Ecosystem</a></li>
+            <li><a href="limitations" target="_blank" rel="noopener">Ncii Legislation Limitations</a></li>
+            <li><a href="prevention" target="_blank" rel="noopener">Platform Suicide Prevention</a></li>
+            <li><a href="platforms" target="_blank" rel="noopener">Self Harm Policies And Internet Platforms</a></li>
+            <li><a href="report" target="_blank" rel="noopener">Self Harm Policies Report</a></li>
+            <li><a href="health" target="_blank" rel="noopener">Social Media And Adolescent Health</a></li>
+            <li><a href="ecosystem" target="_blank" rel="noopener">Update Sg CSAM Ecosystem</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="archive-category" id="ai-threats">
+          <button class="category-toggle" onclick="toggleCategory(this)" aria-expanded="false">
+            <div class="category-info">
+              <h3>AI & Emerging Threats</h3>
+              <p>Research on AI-generated propaganda, deepfakes, foundation models, and emerging technical threats.</p>
+            </div>
+            <div class="category-right">
+              <span class="category-count">11</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </button>
+          <div class="category-body">
+            <ul>
+            <li><a href="followers" target="_blank" rel="noopener">AI Spam Accounts Build Followers</a></li>
+            <li><a href="limitations" target="_blank" rel="noopener">Artificial Intelligence And Counterterrorism Possibilities And Limitations</a></li>
+            <li><a href="army" target="_blank" rel="noopener">Cheerleading Without Fans Low Impact Domestic Information Operation Royal Thai Army</a></li>
+            <li><a href="risk" target="_blank" rel="noopener">Forecasting Potential Misuses Language Models Disinformation Campaigns And How Reduce Risk</a></li>
+            <li><a href="and" target="_blank" rel="noopener">Generative Language Models And Automated Influence Operations Emerging Threats And</a></li>
+            <li><a href="propaganda" target="_blank" rel="noopener">How Persuasive AI Generated Propaganda</a></li>
+            <li><a href="audience" target="_blank" rel="noopener">How Spammers Scammers And Creators Leverage AI Generated Images Facebook Audience</a></li>
+            <li><a href="models" target="_blank" rel="noopener">Opportunities And Risks Foundation Models</a></li>
+            <li><a href="disinformation" target="_blank" rel="noopener">Research Can Help Tackle AI Generated Disinformation</a></li>
+            <li><a href="camp" target="_blank" rel="noopener">Senior Congressional Staff Visit Stanford Cyber And Artificial Intelligence Boot Camp</a></li>
+            <li><a href="communities" target="_blank" rel="noopener">Threat Posed Deepfakes Marginalized Communities</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="archive-category" id="trust-safety">
+          <button class="category-toggle" onclick="toggleCategory(this)" aria-expanded="false">
+            <div class="category-info">
+              <h3>Trust & Safety Policy</h3>
+              <p>Analysis of platform policies, content moderation, encryption, transparency, and online harms.</p>
+            </div>
+            <div class="category-right">
+              <span class="category-count">90</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </button>
+          <div class="category-body">
+            <ul>
+            <li><a href="flows" target="_blank" rel="noopener">Accessibility Trust And Safety Flows</a></li>
+            <li><a href="online" target="_blank" rel="noopener">Addressing Distribution Illicit Sexual Content Minors Online</a></li>
+            <li><a href="information" target="_blank" rel="noopener">Addressing Viral Medical Rumors And False Or Misleading Information</a></li>
+            <li><a href="live" target="_blank" rel="noopener">Agenda Trust Safety Research Conference Now Live</a></li>
+            <li><a href="security" target="_blank" rel="noopener">America’s Anti Hacking Laws Pose Risk National Security</a></li>
+            <li><a href="safety" target="_blank" rel="noopener">Announcing Journal Online Trust And Safety</a></li>
+            <li><a href="2024" target="_blank" rel="noopener">Announcing Tsrc 2024</a></li>
+            <li><a href="legislation" target="_blank" rel="noopener">Avoiding Mandatory Transparencys Pitfalls Online Safety Legislation</a></li>
+            <li><a href="media" target="_blank" rel="noopener">Background Sios Projects Social Media</a></li>
+            <li><a href="reputation" target="_blank" rel="noopener">Bad Reputation</a></li>
+            <li><a href="embeds" target="_blank" rel="noopener">Bed Embeds</a></li>
+            <li><a href="disinformation" target="_blank" rel="noopener">Bing Search Disinformation</a></li>
+            <li><a href="scam" target="_blank" rel="noopener">Binomo Trading Scam</a></li>
+            <li><a href="media" target="_blank" rel="noopener">Black Representation Social Media Well Being Research Scoping Review Social Media</a></li>
+            <li><a href="research" target="_blank" rel="noopener">Call Proposals Expanding Online Trust Safety Research</a></li>
+            <li><a href="2023" target="_blank" rel="noopener">Call Proposals Trust And Safety Research Conference 2023</a></li>
+            <li><a href="information" target="_blank" rel="noopener">Challenges Understanding Human Algorithm Entanglement During Online Information</a></li>
+            <li><a href="china" target="_blank" rel="noopener">China</a></li>
+            <li><a href="report" target="_blank" rel="noopener">Commission Information Disorder Final Report</a></li>
+            <li><a href="primer" target="_blank" rel="noopener">Common Abuses Mastodon Primer</a></li>
+            <li><a href="conference" target="_blank" rel="noopener">Conference Proceedings 2023 Trust And Safety Research Conference</a></li>
+            <li><a href="bias" target="_blank" rel="noopener">Content Moderation Survivor Bias</a></li>
+            <li><a href="providers" target="_blank" rel="noopener">Content Oblivious Trust And Safety Techniques Results Survey Online Service Providers</a></li>
+            <li><a href="parler" target="_blank" rel="noopener">Contours And Controversies Parler</a></li>
+            <li><a href="call" target="_blank" rel="noopener">Cpc Experts Submit Comments Response Digital Services Act Call</a></li>
+            <li><a href="threats" target="_blank" rel="noopener">Cybersecurity Media Roundtable Eyes Threats</a></li>
+            <li><a href="conflict" target="_blank" rel="noopener">Digital Street Conflict</a></li>
+            <li><a href="countries" target="_blank" rel="noopener">Digital Technologies Emerging Countries</a></li>
+            <li><a href="2022_07_27" target="_blank" rel="noopener">Diresta House Testimony 2022_07_27</a></li>
+            <li><a href="2021" target="_blank" rel="noopener">E2EE Workshop Cfp 2021</a></li>
+            <li><a href="workshops" target="_blank" rel="noopener">E2EE Workshops</a></li>
+            <li><a href="ftc" target="_blank" rel="noopener">Elon Puts Rockets Space He’s Not Afraid FTC</a></li>
+            <li><a href="2021" target="_blank" rel="noopener">Embeds Dec 2021</a></li>
+            <li><a href="report" target="_blank" rel="noopener">Facebook’s Former Chief Security Officer Weighs Mueller Report</a></li>
+            <li><a href="resources" target="_blank" rel="noopener">Free Trust And Safety Teaching Resources</a></li>
+            <li><a href="gab" target="_blank" rel="noopener">Gabufacturing Dissent An In Depth Analysis Of GAB</a></li>
+            <li><a href="attention" target="_blank" rel="noopener">Google Gatekeeper How Search Components Affect Clicks And Attention</a></li>
+            <li><a href="states" target="_blank" rel="noopener">Googling Abortion Search Engine Mediation Abortion Accessibility United States</a></li>
+            <li><a href="tinder" target="_blank" rel="noopener">Hey Beautiful Race And Gender Tinder</a></li>
+            <li><a href="birds" target="_blank" rel="noopener">How Online Mobs Act Flocks Birds</a></li>
+            <li><a href="afghans" target="_blank" rel="noopener">Investigation Female Focused Online Campaign Iran And Afghanistan Targeting Afghans</a></li>
+            <li><a href="issue" target="_blank" rel="noopener">Journal Online Trust Safety Publishes Winter 2024 Issue</a></li>
+            <li><a href="issue" target="_blank" rel="noopener">Journal Trust Safety First Issue</a></li>
+            <li><a href="issue" target="_blank" rel="noopener">Journal Trust Safety Second Issue</a></li>
+            <li><a href="min.js’" target="_blank" rel="noopener">Jquery.colorbox Min.js’</a></li>
+            <li><a href="vira" target="_blank" rel="noopener">Launching SIO Vira</a></li>
+            <li><a href="projectTim" target="_blank" rel="noopener">Launching SIO Vira Lity Projecttim</a></li>
+            <li><a href="0" target="_blank" rel="noopener">Meaningful Transparency 0</a></li>
+            <li><a href="encryption" target="_blank" rel="noopener">Meta Just Happens Expand Messenger’s End End Encryption</a></li>
+            <li><a href="rul" target="_blank" rel="noopener">New Intermediary Rul</a></li>
+            <li><a href="users" target="_blank" rel="noopener">New Intermediary Rules Jeopardize Security Indian Internet Users</a></li>
+            <li><a href="attacks" target="_blank" rel="noopener">New Paper Assessing Political Motivations Behind Ransomware Attacks</a></li>
+            <li><a href="forge" target="_blank" rel="noopener">Oct 2020 Fb Ralley Forge</a></li>
+            <li><a href="rally" target="_blank" rel="noopener">Oct 2020 Fb Rally</a></li>
+            <li><a href="manipulation" target="_blank" rel="noopener">Playbook Shares Best Practices Combat Information Manipulation</a></li>
+            <li><a href="disinformation" target="_blank" rel="noopener">Poland Ndp Disinformation</a></li>
+            <li><a href="markets" target="_blank" rel="noopener">Politics Order Informal Markets</a></li>
+            <li><a href="podcast" target="_blank" rel="noopener">Problem Freedom It Aint Free Problem Jon Stewart Podcast</a></li>
+            <li><a href="social" target="_blank" rel="noopener">Psychological Well Being And Social Media Use Meta Analysis Associations Between Social</a></li>
+            <li><a href="speech" target="_blank" rel="noopener">Reddit Hate Speech</a></li>
+            <li><a href="conference" target="_blank" rel="noopener">Registration Open 2024 Trust Safety Research Conference</a></li>
+            <li><a href="duty" target="_blank" rel="noopener">Reporting Duty</a></li>
+            <li><a href="report" target="_blank" rel="noopener">SIO New GAB Report</a></li>
+            <li><a href="contours" target="_blank" rel="noopener">SIO Parler Contours</a></li>
+            <li><a href="reg" target="_blank" rel="noopener">SIO Tsrc 2023 Reg</a></li>
+            <li><a href="web" target="_blank" rel="noopener">Scaling Trust Web</a></li>
+            <li><a href="conflict" target="_blank" rel="noopener">Seven Tips Spotting Disinformation Related Russia Ukraine Conflict</a></li>
+            <li><a href="“loss”" target="_blank" rel="noopener">Shooting Messenger Remediation Disclosed Vulnerabilities CFAA “loss”</a></li>
+            <li><a href="appeal" target="_blank" rel="noopener">Stanford University Files Amicus Brief Missouri V Biden Appeal</a></li>
+            <li><a href="out" target="_blank" rel="noopener">Study Finds Extremist Youtube Content Mainly Viewed Those Seeking It Out</a></li>
+            <li><a href="extremist" target="_blank" rel="noopener">Subscriptions And External Links Help Drive Resentful Users Alternative And Extremist</a></li>
+            <li><a href="taiwan" target="_blank" rel="noopener">Taiwan</a></li>
+            <li><a href="teaching" target="_blank" rel="noopener">Teaching</a></li>
+            <li><a href="abortion" target="_blank" rel="noopener">Threatening Encryption Senate Democrats Aid Gop War Abortion</a></li>
+            <li><a href="missing" target="_blank" rel="noopener">Tiktok Just Announced Data Its Willing Share Whats Missing</a></li>
+            <li><a href="gettr" target="_blank" rel="noopener">Topologies And Tribulations Gettr</a></li>
+            <li><a href="0" target="_blank" rel="noopener">Topologies And Tribulations Gettr Month Life New Alt Network 0</a></li>
+            <li><a href="conference" target="_blank" rel="noopener">Trust Safety Research Conference</a></li>
+            <li><a href="2023" target="_blank" rel="noopener">Trust Safety Research Conference Announced September 28 29 2023</a></li>
+            <li><a href="harms" target="_blank" rel="noopener">Trust Safety Research Conference Showcases Leading Research Preventing Online Harms</a></li>
+            <li><a href="opportunity" target="_blank" rel="noopener">Twitter Files Are Missed Opportunity</a></li>
+            <li><a href="harms" target="_blank" rel="noopener">Uncommon Yet Consequential Online Harms</a></li>
+            <li><a href="2024" target="_blank" rel="noopener">Update Amicus SIO 2024</a></li>
+            <li><a href="search" target="_blank" rel="noopener">Users Choose Engage More Partisan News They Are Exposed Google Search</a></li>
+            <li><a href="harms" target="_blank" rel="noopener">Using Safety Design Address Online Harms</a></li>
+            <li><a href="hand" target="_blank" rel="noopener">Why Encryption And Online Safety Go Hand Hand</a></li>
+            <li><a href="one" target="_blank" rel="noopener">Wikipedia Part One</a></li>
+            <li><a href="two" target="_blank" rel="noopener">Wikipedia Part Two</a></li>
+            <li><a href="youth_online_safety_workshop_summary_20240313" target="_blank" rel="noopener">Youth_online_safety_workshop_summary_20240313</a></li>
+            <li><a href="trust" target="_blank" rel="noopener">Zero Trust</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="archive-category" id="covid">
+          <button class="category-toggle" onclick="toggleCategory(this)" aria-expanded="false">
+            <div class="category-info">
+              <h3>COVID-19 Misinformation</h3>
+              <p>Research on pandemic-related misinformation, vaccine narratives, and state media coverage of COVID-19.</p>
+            </div>
+            <div class="category-right">
+              <span class="category-count">15</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </button>
+          <div class="category-body">
+            <ul>
+            <li><a href="nigeria" target="_blank" rel="noopener">Belief COVID 19 Misinformation Nigeria</a></li>
+            <li><a href="diplomacy" target="_blank" rel="noopener">COVID Mask Diplomacy</a></li>
+            <li><a href="diplomacy.22" target="_blank" rel="noopener">COVID Mask Diplomacy.22</a></li>
+            <li><a href="narrative" target="_blank" rel="noopener">China Covid19 Origin Narrative</a></li>
+            <li><a href="convo" target="_blank" rel="noopener">Chinese State Media Shapes Coronavirus Convo</a></li>
+            <li><a href="era" target="_blank" rel="noopener">Confronting Evolution And Expansion Anti Vaccine Activism USA COVID 19 Era</a></li>
+            <li><a href="hashtag" target="_blank" rel="noopener">Covid1948 Hashtag</a></li>
+            <li><a href="usa" target="_blank" rel="noopener">Effectiveness Vaccination Mandates Improving Uptake COVID 19 Vaccines USA</a></li>
+            <li><a href="ukraine" target="_blank" rel="noopener">Front Influence Analysis Pro Kremlin Network Promoting Narratives COVID 19 And Ukraine</a></li>
+            <li><a href="vaccines" target="_blank" rel="noopener">Memes Magnets And Microchips Narrative Dynamics Around COVID 19 Vaccines</a></li>
+            <li><a href="vaccines" target="_blank" rel="noopener">Online Misinformation About Vaccines</a></li>
+            <li><a href="propaganda" target="_blank" rel="noopener">Pandemics Propaganda</a></li>
+            <li><a href="pandemic" target="_blank" rel="noopener">Penguins And Protests RT And Coronavirus Pandemic</a></li>
+            <li><a href="19" target="_blank" rel="noopener">Saudi Arabia State Media And COVID 19</a></li>
+            <li><a href="spanish" target="_blank" rel="noopener">Two Faces Russian Information Operations Coronavirus Coverage Spanish</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="archive-category" id="institutional">
+          <button class="category-toggle" onclick="toggleCategory(this)" aria-expanded="false">
+            <div class="category-info">
+              <h3>Institutional</h3>
+              <p>Annual reports, project launches, and institutional updates from the Stanford Internet Observatory.</p>
+            </div>
+            <div class="category-right">
+              <span class="category-count">19</span>
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </button>
+          <div class="category-body">
+            <ul>
+            <li><a href="force" target="_blank" rel="noopener">Cyber Policy Center Hosts Federal Kids Online Health And Safety Task Force</a></li>
+            <li><a href="fellow" target="_blank" rel="noopener">Cybersecurity Expert Alex Stamos Joins Stanford University Fellow</a></li>
+            <li><a href="age" target="_blank" rel="noopener">FSI Scholars Join High Level Commission Democracy Digital Age</a></li>
+            <li><a href="course" target="_blank" rel="noopener">Final Projects OSINT Course</a></li>
+            <li><a href="2024" target="_blank" rel="noopener">Hands Policy Practice Look MIP Capstone Projects 2024</a></li>
+            <li><a href="prize" target="_blank" rel="noopener">Karen Nershi SIO Wins 2023 Emerging Scholars Policy Prize</a></li>
+            <li><a href="china" target="_blank" rel="noopener">MIP Students Publish Capstone Reports Taiwan China</a></li>
+            <li><a href="sio" target="_blank" rel="noopener">New Book Out Shelby Grossman SIO</a></li>
+            <li><a href="scholars" target="_blank" rel="noopener">President Sauli Niinisto Finland Discusses Security Cooperation And Defense FSI Scholars</a></li>
+            <li><a href="scholar" target="_blank" rel="noopener">Qa Riana Pfefferkorn Stanford Internet Observatory Research Scholar</a></li>
+            <li><a href="news" target="_blank" rel="noopener">SIO Launches Attribution News</a></li>
+            <li><a href="project" target="_blank" rel="noopener">SIO Trust And Safety Project</a></li>
+            <li><a href="and" target="_blank" rel="noopener">Special Envoy Jacinda Ardern Assembles Stanford Scholars Discussion Technology Governance And</a></li>
+            <li><a href="2021" target="_blank" rel="noopener">Stanford Internet Observatory 2019 2021</a></li>
+            <li><a href="consortium" target="_blank" rel="noopener">Stanford Internet Observatory Launches Trust And Safety Teaching Consortium</a></li>
+            <li><a href="time" target="_blank" rel="noopener">Stanford Internet Observatory Seeks Detect Internet Abuse Real Time</a></li>
+            <li><a href="three" target="_blank" rel="noopener">Stanford Internet Observatory Turns Three</a></li>
+            <li><a href="years" target="_blank" rel="noopener">Stanford Internet Observatory Two Years</a></li>
+            <li><a href="sio" target="_blank" rel="noopener">Update Stanford Internet Observatory SIO</a></li>
+            </ul>
+          </div>
+        </div>
+  </main>
+
+  <footer class="archive-footer">
+  </footer>
+
+  <script>
+    function toggleCategory(btn) {
+      const body = btn.nextElementSibling;
+      btn.classList.toggle('open');
+      body.classList.toggle('open');
+      btn.setAttribute('aria-expanded', btn.classList.contains('open'));
+    }
+
+    function filterArchive(query) {
+      const q = query.toLowerCase().trim();
+      const categories = document.querySelectorAll('.archive-category');
+      let totalVisible = 0;
+
+      categories.forEach(cat => {
+        const items = cat.querySelectorAll('.category-body li');
+        let catVisible = 0;
+        items.forEach(li => {
+          const text = li.textContent.toLowerCase();
+          if (!q || text.includes(q)) {
+            li.classList.remove('hidden');
+            catVisible++;
+          } else {
+            li.classList.add('hidden');
+          }
+        });
+        if (catVisible === 0 && q) {
+          cat.classList.add('hidden');
+        } else {
+          cat.classList.remove('hidden');
+          // Auto-open categories when searching
+          if (q && catVisible > 0) {
+            cat.querySelector('.category-toggle').classList.add('open');
+            cat.querySelector('.category-body').classList.add('open');
+          }
+        }
+        totalVisible += catVisible;
+      });
+
+      const countEl = document.getElementById('searchCount');
+      if (q) {
+        countEl.textContent = totalVisible + ' result' + (totalVisible !== 1 ? 's' : '') + ' found';
+      } else {
+        countEl.textContent = '';
+        // Collapse all when search cleared
+        categories.forEach(cat => {
+          cat.querySelector('.category-toggle').classList.remove('open');
+          cat.querySelector('.category-body').classList.remove('open');
+        });
+      }
+    }
+  </script>
+</body>
+</html>
